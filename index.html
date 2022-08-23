@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Plataforma de videos</title>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Plataforma de videos 🎥</h1>
+        <div class="container-videos-geral">
+
+        </div>
+    </div>
+
+    <script type="module">
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+       
+        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js';
+        const firebaseConfig = {
+          apiKey: "AIzaSyC7SBgEEqp5mW92oi3bQ9Yhen_Zdh0FTiI",
+          authDomain: "videos-75708.firebaseapp.com",
+          projectId: "videos-75708",
+          storageBucket: "videos-75708.appspot.com",
+          messagingSenderId: "545663830654",
+          appId: "1:545663830654:web:604cad7de45a3ebf2e662f"
+        };
+      
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function fecthData(db){
+            const docsCol = collection(db, 'videos');
+            const docSnap = await getDocs(docsCol);
+            const docList = docSnap.docs.map(doc=>doc.data());
+            return docList;
+        }
+
+        let videos = await fecthData(db);
+
+        let containerVideos = document.querySelector('.container-videos-geral');
+        for(let i =0; i < videos.length; i++){
+            containerVideos.innerHTML+=`
+                <div class="video-single">
+                    <div class="video-title">
+                        <h3>`+videos[i].nome+`</h3>
+                    </div>
+                    <div class="video-content">
+                        <video controls>
+                            <source src="`+videos[i].url+`" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            `
+        }
+
+      </script>
+</body>
+</html>
